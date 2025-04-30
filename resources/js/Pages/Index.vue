@@ -1,11 +1,13 @@
 <script setup>
-import { ref, onMounted } from 'vue'
 import { Inertia } from '@inertiajs/inertia'
-import { usePage, Head, Link } from '@inertiajs/vue3'
-import axiosInstance from '../axios'
+import { Head, Link, usePage } from '@inertiajs/vue3'
 import debounce from 'just-debounce-it'
-import Multiselect from 'vue-multiselect'
+import { defineAsyncComponent, onMounted, ref } from 'vue'
 import 'vue-multiselect/dist/vue-multiselect.min.css'
+import axiosInstance from '../axios'
+
+const Multiselect = defineAsyncComponent(() => import('vue-multiselect'))
+
 
 const props = usePage().props
 const selectedCategory = ref(props.filters.category_id || null)
