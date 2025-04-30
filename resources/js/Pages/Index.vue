@@ -32,7 +32,13 @@ const fetchCategories = async (q = '') => {
 const debouncedFetch = debounce(fetchCategories, 300)
 
 onMounted(() => {
-    fetchCategories('')
+    fetchCategories('').then(() => {
+        if (props.filters.category_id && !selectedCategory.value?.id) {
+            selectedCategory.value = categories.value.find(
+                (c) => c.id === Number(props.filters.category_id)
+            ) || null
+        }
+    })
 })
 
 const applyFilter = () => {
@@ -76,27 +82,18 @@ const clearFilter = () => {
     <!-- ⬜ Filter + Results -->
     <section id="filter" class="container mx-auto p-6 bg-white scroll-mt-24">
         <!-- Filter -->
-        <div class="mb-6">
-            <label class="block mb-2 text-sm font-semibold text-gray-700">
-                Filter by Category:
-            </label>
-            <div class="flex items-center">
-                <div class="flex-grow">
-                    <Multiselect v-model="selectedCategory" :options="categories" :searchable="true"
-                        :internal-search="false" :label="'name'" :track-by="'id'" placeholder="Search categories…"
-                        :clear-on-select="true" :close-on-select="true" @search-change="debouncedFetch"
-                        @select="applyFilter" />
-                </div>
-                <button v-if="selectedCategory" @click="clearFilter"
-                    class="ml-2 px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
-                    Clear
-                </button>
+        <div class="flex items-center my-4">
+            <div class="flex-grow max-w-md w-full mx-auto">
+                <Multiselect v-model="selectedCategory" :options="categories" :searchable="true"
+                    :internal-search="false" :label="'name'" :track-by="'id'" placeholder="Search categories…"
+                    :clear-on-select="true" :close-on-select="true" @search-change="debouncedFetch"
+                    @select="applyFilter" />
             </div>
-            <div v-if="loading" class="mt-2 text-sm text-gray-500">
-                Loading categories...
-            </div>
+            <button v-if="selectedCategory" @click="clearFilter"
+                class="ml-2 px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                Clear
+            </button>
         </div>
-
         <!-- Provider Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <a v-for="p in props.serviceProviders.data" :key="p.id" :href="`/${p.id}`"
