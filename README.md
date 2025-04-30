@@ -1,5 +1,5 @@
 # Service Provider Directory – Laravel Production Setup
-[!Screenshot](./Directomy.png)
+![Screenshot](/Directomy.png)
 This project is a Laravel-based directory of service providers, optimized for production deployment. It utilizes a Dockerized MySQL database and a streamlined shell script (`startup-prod.sh`) to automate the build, migration, and launch processes.
 
 ---
