@@ -1,7 +1,8 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { Inertia } from '@inertiajs/inertia'
 import { usePage, Head, Link } from '@inertiajs/vue3'
+
 import axiosInstance from '../../axios'
 import debounce from 'just-debounce-it'
 import Multiselect from 'vue-multiselect'
