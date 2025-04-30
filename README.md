@@ -4,7 +4,7 @@ This project is a Laravel-based directory of service providers, optimized for pr
 
 ---
 
-## ⚙️ Project Overview
+## ⚙ Project Overview
 
 - **Framework**: Laravel 10
 - **Database**: MySQL 8.0 (Dockerized)
@@ -14,7 +14,7 @@ This project is a Laravel-based directory of service providers, optimized for pr
 
 ---
 
-## 🚀 Setup Instructions
+## Setup Instructions
 
 ### 1. Clone the Repository
 
