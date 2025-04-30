@@ -9,7 +9,7 @@ const { provider } = usePage().props
     <Head :title="provider.name" />
 
     <div class="container mx-auto p-6 max-w-3xl">
-        <Link href="/providers" class="text-sm text-blue-600 hover:underline">&larr; Back to List</Link>
+        <Link href="/" class="text-sm text-blue-600 hover:underline">&larr; Back to List</Link>
 
         <div class="mt-6 p-6 bg-white shadow rounded">
             <div class="flex justify-center mb-4">

@@ -1,10 +1,7 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceProviderController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,10 +16,9 @@ use Inertia\Inertia;
 
 
 
-Route::get('/', [ServiceProviderController::class, 'index'])->name('providers.index');
-Route::get('/{provider}', [ServiceProviderController::class, 'show'])
-    ->middleware(['auth'])
-    ->name('providers.show');
+Route::get('/', [ServiceProviderController::class, 'index'])->name('index');
+
+Route::get('/{provider}', [ServiceProviderController::class, 'show'])->name('show');
 
 
 require __DIR__ . '/auth.php';
