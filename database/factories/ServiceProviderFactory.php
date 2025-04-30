@@ -22,7 +22,10 @@ class ServiceProviderFactory extends Factory
         return [
             'name' => $this->faker->company(),
             'short_description' => $this->faker->sentence(),
-            'logo' => $this->faker->imageUrl(300, 300, 'business', true, 'Logo'),
+            'logo' => $this->faker->optional()->randomElement([
+                null,
+                'https://placehold.co/300x300?text=Logo',
+            ]),
             'category_id' => Category::factory(),
         ];
     }
