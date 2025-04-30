@@ -1,85 +1,83 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted } from 'vue'
 import { Inertia } from '@inertiajs/inertia'
 import { usePage, Head, Link } from '@inertiajs/vue3'
-
 import axiosInstance from '../axios'
 import debounce from 'just-debounce-it'
 import Multiselect from 'vue-multiselect'
 import 'vue-multiselect/dist/vue-multiselect.min.css'
 
 const props = usePage().props
-const selectedCategory = ref(null)
+const selectedCategory = ref(props.filters.category_id || null)
 const categories = ref([])
 const loading = ref(false)
 
 const fetchCategories = async (q = '') => {
-  loading.value = true
-  try {
-    const { data } = await axiosInstance.get('/api/categories', {
-      params: { search: q }
-    })
-    categories.value = Array.isArray(data) ? data : []
-  } catch (error) {
-    console.error('Error fetching categories:', error)
-    categories.value = []
-  } finally {
-    loading.value = false
-  }
+    loading.value = true
+    try {
+        const { data } = await axiosInstance.get('/api/categories', {
+            params: { search: q }
+        })
+        categories.value = Array.isArray(data) ? data : []
+    } catch (error) {
+        console.error('Error fetching categories:', error)
+        categories.value = []
+    } finally {
+        loading.value = false
+    }
 }
 
-// Debounced version
 const debouncedFetch = debounce(fetchCategories, 300)
 
-// Restore selected category object after categories are fetched
-watch(categories, () => {
-  const id = props.filters.category_id
-  if (id) {
-    const match = categories.value.find(c => c.id === Number(id))
-    if (match) selectedCategory.value = match
-  }
-}, { immediate: true })
-
 onMounted(() => {
-  fetchCategories()
+    fetchCategories('')
 })
 
 const applyFilter = () => {
-  const params = selectedCategory.value?.id
-    ? { category_id: selectedCategory.value.id }
-    : {}
+    const params = selectedCategory.value?.id
+        ? { category_id: selectedCategory.value.id }
+        : {}
 
-  Inertia.get('/', params, {
-    preserveScroll: true,
-    preserveState: true,
-    replace: true,
-    only: ['serviceProviders', 'filters'],
-  })
+    Inertia.get('/', params, {
+        preserveScroll: true,
+        preserveState: true,
+        replace: true,
+        only: ['serviceProviders', 'filters'],
+    })
 }
 
 const clearFilter = () => {
-  selectedCategory.value = null
-  Inertia.get('/', {}, {
-    preserveScroll: true,
-    preserveState: true,
-    replace: true,
-    only: ['serviceProviders', 'filters'],
-  })
+    selectedCategory.value = null
+    Inertia.get('/', {}, {
+        preserveScroll: true,
+        preserveState: true,
+        replace: true,
+        only: ['serviceProviders', 'filters'],
+    })
 }
 </script>
-
 
 <template>
 
     <Head title="Service Providers" />
 
-    <section class="container mx-auto p-6">
-        <!-- ▼ category filter -->
+    <!-- 🟦 Hero Section -->
+    <section class="bg-primary text-white py-20 px-6 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">Directomy</h1>
+        <p class="text-lg md:text-xl mb-6">Your one-stop shop for every service</p>
+        <a href="#filter"
+            class="bg-accent hover:bg-green-500 text-white font-semibold py-2 px-6 rounded shadow transition">
+            Explore Providers
+        </a>
+    </section>
+
+    <!-- ⬜ Filter + Results -->
+    <section id="filter" class="container mx-auto p-6 bg-white scroll-mt-24">
+        <!-- Filter -->
         <div class="mb-6">
             <label class="block mb-2 text-sm font-semibold text-gray-700">
                 Filter by Category:
             </label>
-
             <div class="flex items-center">
                 <div class="flex-grow">
                     <Multiselect v-model="selectedCategory" :options="categories" :searchable="true"
@@ -87,48 +85,35 @@ const clearFilter = () => {
                         :clear-on-select="true" :close-on-select="true" @search-change="debouncedFetch"
                         @select="applyFilter" />
                 </div>
-
                 <button v-if="selectedCategory" @click="clearFilter"
                     class="ml-2 px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
                     Clear
                 </button>
             </div>
-
             <div v-if="loading" class="mt-2 text-sm text-gray-500">
                 Loading categories...
             </div>
         </div>
 
-        <!-- ▼ provider cards -->
-       <!-- ▼ provider cards -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-  <a v-for="p in props.serviceProviders.data"
-     :key="p.id"
-     :href="`/${p.id}`"
-     target="_blank"
-     rel="noopener noreferrer"
-     class="block p-4 bg-white shadow rounded transition hover:shadow-md hover:bg-gray-50">
-    
-    <div class="h-24 w-24 mx-auto mb-4 flex items-center justify-center bg-gray-100 rounded-full">
-      <img v-if="p.logo"
-           :src="p.logo"
-           alt="Logo"
-           class="h-24 w-24 object-cover rounded-full"
-           loading="lazy" />
-      <i v-else class="fas fa-building text-4xl text-gray-400 leading-none" aria-hidden="true"></i>
-    </div>
+        <!-- Provider Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <a v-for="p in props.serviceProviders.data" :key="p.id" :href="`/${p.id}`"
+                class="block p-4 bg-light-bg border border-gray-200 hover:shadow-lg transition rounded-lg">
+                <div class="flex justify-center items-center mb-4">
+                    <img v-if="p.logo" :src="p.logo" alt="Logo" class="h-24 w-24 object-cover rounded-full" />
+                    <i v-else class="fas fa-building text-4xl text-gray-400"></i>
+                </div>
+                <h2 class="text-xl font-bold text-center text-primary">{{ p.name }}</h2>
+                <p class="text-sm text-gray-600 text-center mt-2">{{ p.short_description }}</p>
+                <p class="text-xs text-gray-500 text-center mt-1">{{ p.category.name }}</p>
+            </a>
+        </div>
 
-    <h2 class="text-lg font-semibold text-center">{{ p.name }}</h2>
-    <p class="text-sm text-gray-500 text-center">{{ p.short_description }}</p>
-    <p class="text-xs text-gray-400 text-center mt-2">{{ p.category.name }}</p>
-  </a>
-</div>
-
-
+        <!-- Pagination -->
         <div v-if="props.serviceProviders.links" class="mt-6 text-center">
             <template v-for="(link, i) in props.serviceProviders.links" :key="i">
-                <Link v-if="link.url" :href="link.url" v-html="link.label" class="px-3 py-1 border rounded text-sm"
-                    :class="{ 'font-bold': link.active }" />
+                <Link v-if="link.url" :href="link.url" v-html="link.label" class="px-3 py-1 border rounded text-sm mx-1"
+                    :class="{ 'font-bold text-primary': link.active }" />
                 <span v-else v-html="link.label"
                     class="px-3 py-1 border rounded text-sm text-gray-400 cursor-not-allowed" />
             </template>

@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.bg-primary {
+    background: linear-gradient(135deg, #061c52 0%, #0b2157 100%);
+}
+
+.bg-accent {
+    background-color: #00d084;
+}
+
+.bg-light-bg {
+    background-color: #f3f8ff;
+}
