@@ -17,5 +17,19 @@ export default defineConfig({
             },
         }),
     ],
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    vendor: [
+                        'vue',
+                        '@inertiajs/inertia',
+                        '@inertiajs/vue3',
+                        'just-debounce-it',
+                        'vue-multiselect',
+                    ],
+                },
+            },
+        },
+    },
 });
-
