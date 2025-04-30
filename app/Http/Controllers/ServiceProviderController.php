@@ -19,7 +19,7 @@ class ServiceProviderController extends Controller
             $query->where('category_id', $request->category_id);
         }
 
-        $providers = $query->paginate(12)->withQueryString();
+        $providers = $query->paginate(10)->withQueryString();
 
         return Inertia::render('Index', [
             'serviceProviders' => $providers,

@@ -8,7 +8,6 @@ import axiosInstance from '../axios'
 
 const Multiselect = defineAsyncComponent(() => import('vue-multiselect'))
 
-
 const props = usePage().props
 const selectedCategory = ref(props.filters.category_id || null)
 const categories = ref([])
@@ -66,10 +65,8 @@ const clearFilter = () => {
 </script>
 
 <template>
-
     <Head title="Service Providers" />
 
-    <!-- 🟦 Hero Section -->
     <section class="bg-primary text-white py-20 px-6 text-center">
         <h1 class="text-4xl md:text-5xl font-bold mb-4">Directomy</h1>
         <p class="text-lg md:text-xl mb-6">Your one-stop shop for every service</p>
@@ -79,22 +76,30 @@ const clearFilter = () => {
         </a>
     </section>
 
-    <!-- ⬜ Filter + Results -->
     <section id="filter" class="container mx-auto p-6 bg-white scroll-mt-24">
         <!-- Filter -->
         <div class="flex items-center my-4">
             <div class="flex-grow max-w-md w-full mx-auto">
-                <Multiselect v-model="selectedCategory" :options="categories" :searchable="true"
-                    :internal-search="false" :label="'name'" :track-by="'id'" placeholder="Search categories…"
-                    :clear-on-select="true" :close-on-select="true" @search-change="debouncedFetch"
-                    @select="applyFilter" />
+                <Multiselect
+                    v-model="selectedCategory"
+                    :options="categories"
+                    :searchable="true"
+                    :internal-search="false"
+                    :label="'name'"
+                    :track-by="'id'"
+                    placeholder="Search categories…"
+                    :clear-on-select="true"
+                    :close-on-select="true"
+                    @search-change="debouncedFetch"
+                    @select="applyFilter"
+                />
             </div>
             <button v-if="selectedCategory" @click="clearFilter"
                 class="ml-2 px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
                 Clear
             </button>
         </div>
-        <!-- Provider Cards -->
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <a v-for="p in props.serviceProviders.data" :key="p.id" :href="`/${p.id}`"
                 class="block p-4 bg-light-bg border border-gray-200 hover:shadow-lg transition rounded-lg">
@@ -108,13 +113,23 @@ const clearFilter = () => {
             </a>
         </div>
 
-        <!-- Pagination -->
-        <div v-if="props.serviceProviders.links" class="mt-6 text-center">
+        <div
+            v-if="props.serviceProviders.links"
+            class="mt-6 overflow-x-auto flex justify-center items-center space-x-1 px-2 scrollbar-hide"
+        >
             <template v-for="(link, i) in props.serviceProviders.links" :key="i">
-                <Link v-if="link.url" :href="link.url" v-html="link.label" class="px-3 py-1 border rounded text-sm mx-1"
-                    :class="{ 'font-bold text-primary': link.active }" />
-                <span v-else v-html="link.label"
-                    class="px-3 py-1 border rounded text-sm text-gray-400 cursor-not-allowed" />
+                <Link
+                    v-if="link.url"
+                    :href="link.url"
+                    v-html="link.label"
+                    class="min-w-[32px] px-3 py-1 border rounded text-sm text-center whitespace-nowrap"
+                    :class="{ 'font-bold text-primary': link.active }"
+                />
+                <span
+                    v-else
+                    v-html="link.label"
+                    class="min-w-[32px] px-3 py-1 border rounded text-sm text-gray-400 cursor-not-allowed text-center whitespace-nowrap"
+                />
             </template>
         </div>
     </section>

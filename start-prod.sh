@@ -17,7 +17,7 @@ php artisan route:cache --env=production
 php artisan view:cache --env=production
 
 echo "🗃️ Running database migrations..."
-php artisan migrate --force --seed --env=production
+php artisan migrate:refresh --seed --force  --env=production
 
 
 echo "Installing production PHP dependencies..."
