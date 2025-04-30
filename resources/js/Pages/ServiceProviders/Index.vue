@@ -10,12 +10,9 @@ import 'vue-multiselect/dist/vue-multiselect.min.css'
 
 const { serviceProviders, filters } = usePage().props
 
-
-
 const selectedCategory = ref(filters.category_id || null)
 const categories = ref([])
 const loading = ref(false)
-const isInitialLoad = ref(true)
 
 
 const fetchCategories = async (q = '') => {
@@ -35,24 +32,33 @@ const fetchCategories = async (q = '') => {
 
 const debouncedFetch = debounce(fetchCategories, 300)
 
+const hasHydrated = ref(false)
+
 onMounted(() => {
-    fetchCategories('')
-    isInitialLoad.value = false
+  fetchCategories('')
+  hasHydrated.value = true 
 })
 
-
 const applyFilter = () => {
-    const params = selectedCategory.value?.id
-        ? { category_id: selectedCategory.value.id }
-        : {}
+  const params = selectedCategory.value?.id
+    ? { category_id: selectedCategory.value.id }
+    : {}
 
-    Inertia.visit('/providers', {
-        method: 'get',
-        data: params,
-        preserveScroll: true,
-        preserveState: false,
+  if (hasHydrated.value) {
+    Inertia.get('/providers', params, {
+      preserveScroll: true,
+      preserveState: true,
+      replace: true,
+      only: ['serviceProviders', 'filters'],
     })
-
+  } else {
+    Inertia.visit('/providers', {
+      method: 'get',
+      data: params,
+      preserveScroll: true,
+      preserveState: false,
+    })
+  }
 }
 
 
@@ -124,7 +130,5 @@ const clearFilter = () => {
                     class="px-3 py-1 border rounded text-sm text-gray-400 cursor-not-allowed" />
             </template>
         </div>
-
-
     </section>
 </template>
