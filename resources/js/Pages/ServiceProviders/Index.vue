@@ -15,6 +15,9 @@ const categories = ref([])
 const loading = ref(false)
 
 
+
+
+
 const fetchCategories = async (q = '') => {
     loading.value = true
     try {
@@ -32,8 +35,9 @@ const fetchCategories = async (q = '') => {
 
 const debouncedFetch = debounce(fetchCategories, 300)
 
-const hasHydrated = ref(false)
 
+
+const hasHydrated = ref(false)
 onMounted(() => {
   fetchCategories('')
   hasHydrated.value = true 
