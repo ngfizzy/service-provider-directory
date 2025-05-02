@@ -19,7 +19,7 @@ This project is a Laravel-based directory of service providers, optimized for pr
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/service-provider-directory.git
+git clone https://github.com/ngfizzy/service-provider-directory.git
 cd service-provider-directory
 ```
 
