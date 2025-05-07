@@ -9,6 +9,10 @@ class ServiceProviderSeeder extends Seeder
 {
     public function run(): void
     {
-        ServiceProvider::factory()->count(100)->create();
+        $providers = ServiceProvider::factory()
+            ->count(100)
+            ->make()
+            ->toArray();
+        ServiceProvider::insertOrIgnore($providers);
     }
 }
